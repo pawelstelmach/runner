@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>
+<id><%= @final_request["id"] %></id>
+<class><%= @final_request["class"] %></class>
+<matrix>
+<% @matrix.each do |row| %>
+ <row>
+  <% row.each do |item|%>
+  <item><%= item %></item>
+  <% end %>
+ </row>
+<% end %>
+</matrix>
+<functionalities>
+ <% @final_plan.each do |p, u| %>
+ <% functionality_id = p.proces_id.to_i-1 %>
+ <functionality>
+  <id><%= @final_request["functionalities"]["functionality"][functionality_id]["id"] %></id> 
+  <name><%= @final_request["functionalities"]["functionality"][functionality_id]["name"] %></name>
+  <child><%= @final_request["functionalities"]["functionality"][functionality_id]["child"] %></child>
+  <% @final_request["functionalities"]["functionality"][functionality_id]["input"].each do |t|%>
+  <input><%= t %></input>
+  <% end %>
+  <% @final_request["functionalities"]["functionality"][functionality_id]["output"].each do |t|%>
+  <output><%= t %></output>
+  <% end %>
+  <services>
+  <% p.kandydaci.each do |k| %>
+   <service>
+    <id><%= k.id %></id>
+    <name><%= k.name %></name>
+	<% if k.id == u.id %>
+    	<chosen>true</chosen>
+	<% else %>	
+    	<chosen>false</chosen>
+    <% end %>
+	<% temp_array = k.input.split(',') %>
+	<% temp_array.each do |t| %>
+    <input><%= t %></input>
+	<% end %>
+	<% temp_array = k.output.split(',') %>
+	<% temp_array.each do |t| %>
+    <output><%= t %></output>
+	<% end %>
+	<time>
+		<value><%= k.response_time %></value>
+	</time>
+	<cost>
+		<value><%= k.cost %></value>
+	</cost>
+	<description><%= k.description %></description>
+   </service>
+   <% end %>
+  </services>
+ </functionality>
+ <% end %>
+</functionalities>
+<nonfunctionalities>
+ <total>
+  <response_time>
+   <relation>less</relation>
+   <value><%= @final_request["nonfunctionalities"]["total"]["response_time"]["value"] %></value>
+   <unit>s</unit>
+   <weight><%= @final_request["nonfunctionalities"]["total"]["response_time"]["weight"]%></weight>
+  </response_time>
+  <cost>
+   <relation>less</relation>
+   <value><%= @final_request["nonfunctionalities"]["total"]["cost"]["value"] %></value>
+   <unit>zł</unit> 
+   <weight><%= @final_request["nonfunctionalities"]["total"]["cost"]["weight"] %></weight>
+  </cost>
+ </total >
+ <singular>
+  <service>
+  <id></id>
+  <reputation>
+   <relation></relation>
+   <value></value>
+   <unit></unit>
+  </reputation >
+ </service >
+</singular>
+</nonfunctionalities>
+<data></data>
+<parameters>
+ <max_candidates> </max_candidates>
+ <algorithm_iteration_number> </algorithm_iteration_number>
+ <neighbour_plan_number> </neighbour_plan_number>
+ <similarity_value> </similarity_value>
+ <serivce_selection_algorithm> </serivce_selection_algorithm>
+</parameters>
+</request>

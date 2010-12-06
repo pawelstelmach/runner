@@ -1,0 +1,15 @@
+*~
+*.cache
+*.log
+*.pid
+config/*.sphinx.conf
+config/s3_credentials.yml
+tmp/**/*
+.DS_Store
+db/*.sqlite3
+doc
+*.tmproj
+webrat-*.html
+.bundle
+vendor/bundler_gems
+bin

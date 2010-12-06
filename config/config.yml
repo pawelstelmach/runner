@@ -1,0 +1,13 @@
+development:
+  gui_url: localhost:3000
+  runner_url: localhost:3001
+  services_url: localhost:3002
+  opinions_url: localhost:3003
+  edges_url: localhost:3004
+  
+production:
+  gui_url: localhost:3000
+  runner_url: localhost:3001
+  services_url: localhost:3002
+  opinions_url: localhost:3003
+  edges_url: localhost:3004

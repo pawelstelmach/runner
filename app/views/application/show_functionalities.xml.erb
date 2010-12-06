@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<functionalities>
+ <% @experiment.each do |p, u| %>
+ <% functionality_id = p.proces_id.to_i-1 %>
+ <functionality>
+  <id><%= @experiment["functionalities"]["functionality"][functionality_id]["id"] %></id> 
+  <name><%= @experiment["functionalities"]["functionality"][functionality_id]["name"] %></name>
+  <child><%= @experiment["functionalities"]["functionality"][functionality_id]["child"] %></child>
+  <% @experiment["functionalities"]["functionality"][functionality_id]["input"].each do |t|%>
+  <input><%= t %></input>
+  <% end %>
+  <% @experiment["functionalities"]["functionality"][functionality_id]["output"].each do |t|%>
+  <output><%= t %></output>
+  <% end %>
+ </functionality>
+ <% end %>
+</functionalities>
