@@ -4,10 +4,10 @@ development:
   services_url: localhost:3002
   opinions_url: localhost:3003
   edges_url: localhost:3004
-  
+
 production:
-  gui_url: localhost:3000
-  runner_url: localhost:3001
-  services_url: localhost:3002
-  opinions_url: localhost:3003
-  edges_url: localhost:3004
+  gui_url: 156.17.130.19:13000
+  runner_url: 156.17.130.19:13001
+  services_url: 156.17.130.19:13002
+  opinions_url: 156.17.130.19:13003
+  edges_url: 156.17.130.19:13004

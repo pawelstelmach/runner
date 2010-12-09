@@ -8,18 +8,32 @@ class ProcesZlozony
 		@tabu = ListaTabu.new
 		@wagi = {}
 		@ograniczenia = {}
-    procesy = procesy["functionalities"]["functionality"]    
-    
+    procesy = procesy["functionalities"]["functionality"]
+    print procesy.inspect
+    temp_procesy = Array.new
+    procesy.each do |p|
+      unless p["class"]=="#start" || p["class"]=="#end"
+        temp_procesy << p
+        print "!!!\n\n"
+        print p.inspect
+        print "!!!\n\n"
+      end
+    end
+    procesy = temp_procesy
+        
 		# create nodes
 		procesy.each do |p|
+      print "\n\n!!! #{p["class"]} \n\n"  
 			@procesy[p["id"]] = Proces.new( p )
 		end
 		
 		# create connections
 		procesy.each do |p|
 			p["child"].each do |cid|
-				@procesy[p["id"]].childs << @procesy[cid]
-				@procesy[cid].parents << @procesy[p["id"]]
+        unless @procesy[cid].nil?  
+          @procesy[p["id"]].childs << @procesy[cid]
+          @procesy[cid].parents << @procesy[p["id"]]
+        end
 			end if p["child"]
 		end
 	end

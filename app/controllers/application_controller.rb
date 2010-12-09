@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     
     raise 'Blad odczytu konfiguracji kompozycji' if @eksperyment == nil
 
-    #check_edges(@eksperyment)
+    check_edges(@eksperyment)
     # wykryj zmieniajace sie elementy, lekka zadyma, bo moga tu byc zagniezdzenia
     changes = {}
     @eksperyment.each do |k,v|
@@ -148,11 +148,17 @@ private
     
     @final_plan = plan
     @final_request = request
+    @start = @final_request["functionalities"]["functionality"].select do |item|item["class"]=="#start" end
+    @start = @start.first
+    @end = @final_request["functionalities"]["functionality"].select do |item|item["class"]=="#end" end
+    @end = @end.first
     render 'pokaz_plan.xml.erb'
   end
 
   def check_edges(eksperyment)
-    data = {:sla => show_functionalities(eksperyment)}
+
+    xml = functionalities_to_xml(eksperyment)
+    data = {:sla => xml}
     uri = URI.parse("http://#{APP_CONFIG['edges_url']}/run")
     http = Net::HTTP.new(uri.host, uri.port)
     http.open_timeout = 1.hour
@@ -161,10 +167,40 @@ private
     request.set_form_data( data )
     result = http.request(request)
     result = result.body.strip
-    @eksperyment["functionalities"] = result
+    @eksperyment["functionalities"] = Hash.from_xml(result)["functionalities"]
   end
   
-  def show_functionalities(eksperyment)
-    @experiment = eksperyment
+  def functionalities_to_xml(eksperyment)
+    functionalities = eksperyment["functionalities"]["functionality"]
+    buffer = ""
+    xml_build = Builder::XmlMarkup.new(:target => buffer, :ident=>2)
+    xml_build.instruct! 
+    xml_build.functionalities { 
+    functionalities.each do |f| 
+      xml_build.functionality {
+        xml_build.id(f["id"])
+        xml_build.name(f["name"]) 
+        xml_build.class(f["class"]) 
+        unless f["child"].nil?
+          f["child"].to_a
+          f["child"].each do |c|
+            xml_build.child(c)
+          end
+        end
+        unless f["input"].nil?
+          f["input"].to_a
+          f["input"].each do |i|
+            xml_build.input(i)
+          end
+        end
+        unless f["output"].nil?
+          f["output"].to_a
+          f["output"].each do |o|
+            xml_build.output(o)
+          end
+        end
+      }
+    end};
+    return buffer
   end
 end
