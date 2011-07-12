@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
 	helper :all # include all helpers, all the time
 
-  def run
+  def run #depracted - this controller methods shouldn't be used for service composition
     raise 'No url given.' unless params[:url] # nie podano adresu pliku xml z @eksperymentem
 
     @t = Timer.new
@@ -24,7 +24,9 @@ class ApplicationController < ActionController::Base
     changes = {}
     @eksperyment.each do |k,v|
       changes[k] = v if v.include? '..'
+      puts "!!!  #{k} -> #{v}\n !!!"
       v.each { |kk,vv| changes[k+'_'+kk] = vv if vv.include? '..'  
+      puts "!!!  #{kk} -> #{vv}\n !!!"
       } if v.class == Hash #dla zagniezdzonych
     end
     
@@ -69,12 +71,14 @@ private
     tmp = {}
     @eksperyment["nonfunctionalities"]["total"].each do |k, v|
       tmp[k] = v["weight"].to_f
+      #puts "!!!  #{k} -> #{v["weight"].to_f}\n !!!"
     end
     @p.wagi = tmp
     
     tmp = {}
     @eksperyment["nonfunctionalities"]["total"].each do |k, v|
       tmp[k] = v["value"].to_f
+      #puts "!!!  #{k} -> #{v["value"].to_f}\n !!!"
     end
     @p.ograniczenia = tmp
     

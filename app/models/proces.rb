@@ -15,6 +15,19 @@ class Proces
 	end
 
 	def kandydaci
+  require 'soap/wsdlDriver'
+  wsdl = "http://#{APP_CONFIG['mediator_url']}/mediator/wsdl"
+  services = SOAP::WSDLDriverFactory.new(wsdl).create_rpc_driver
+  #TODO why error?
+  begin
+    result = services.GetServicesBy(@@algorytm_doboru_uslug, @input.split(',').sort.join(','), @output.split(',').sort.join(','), @@podobienstwo, @@max_kandydatow, @service_class )
+  rescue
+    result = []
+  end
+  @kandydaci = result
+end
+  
+  def kandydaci_working
    print "#{@class}\n\n"
 		@kandydaci ||= Service.find(:all, :from => @@algorytm_doboru_uslug.to_sym, 
 			:params => {

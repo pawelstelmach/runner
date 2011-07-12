@@ -14,16 +14,12 @@ class ProcesZlozony
     procesy.each do |p|
       unless p["class"]=="#start" || p["class"]=="#end"
         temp_procesy << p
-        print "!!!\n\n"
-        print p.inspect
-        print "!!!\n\n"
       end
     end
     procesy = temp_procesy
         
 		# create nodes
 		procesy.each do |p|
-      print "\n\n!!! #{p["class"]} \n\n"  
 			@procesy[p["id"]] = Proces.new( p )
 		end
 		
@@ -66,7 +62,6 @@ class ProcesZlozony
 	def plan_wykonania(iter_max = 10)
    print "plan_wykonania!!"
 		plan = plan_poczatkowy
-    print plan
 		@najplan = plan.clone
 		if jakosc(plan) == 0
 			# puts "Plan poczatkowy odrazu mial jakosc=0 :)".green 
@@ -105,7 +100,8 @@ class ProcesZlozony
 			else
 				@wagi[typ] * [0, (@ograniczenia[typ] - agreguj(typ))/@ograniczenia[typ].to_f ].max
 			end
-		end
+	end
+  #przyjrzeć się temu miejscu
 		if wektor
 			temp = {}
 			Qos::TYPES.each_with_index { |typ,i| temp[typ] = v[i] }
@@ -117,6 +113,7 @@ class ProcesZlozony
 	
 	def agreguj(typ)
     #print "\n!!! Agreguje \n!!!"
+    #print "\n!!! #{typ} \n!!!"
 		@aktualny_qos = typ.to_sym #zachowujemy informacje dla f-cji p()
     eval(@qos[typ.to_sym])
 	end
@@ -128,7 +125,7 @@ class ProcesZlozony
     #print @procesy[id.to_s].nil?
     #print @aktualny_plan #tu jest problem!!
     #print @aktualny_plan[ @procesy[id.to_s] ].nil?
-		@aktualny_plan[ @procesy[id.to_s] ].send(@aktualny_qos)
+		@aktualny_plan[ @procesy[id] ].send(@aktualny_qos)
 	end
 	
 	#Określa jak dana usługa jest dopasowana do wymagań użytkownika
@@ -137,7 +134,7 @@ class ProcesZlozony
 			qosy_kandydatow = proces.kandydaci.map{|kandydat| kandydat.send(typ)}
 			sum + if qosy_kandydatow.standard_deviation != 0
 				@wagi[typ] * 
-				( %w(cost time).include?(typ)?(-1):(1) ) *
+				( %w(cost response_time).include?(typ)?(-1):(1) ) *
 				( (usluga.send(typ) - qosy_kandydatow.average) / qosy_kandydatow.standard_deviation )
 			else
 				@wagi[typ] * usluga.send(typ)
@@ -167,7 +164,7 @@ class ProcesZlozony
 					# Logger.log ['brak kandydatow', "proces => #{proces.proces_id}"]
 					# render :text => "Brak uslug dla procesu #{@proces_id}".red and return false unless @kandydaci
 				else
-					kandydat = (%w(cost time).include? typ) ? kandydaci.first : kandydaci.last
+					kandydat = (%w(cost response_time).include? typ) ? kandydaci.first : kandydaci.last
 					@tabu.dodaj [proces, kandydat]
 					plan[proces] = kandydat
 				end

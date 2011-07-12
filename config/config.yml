@@ -4,6 +4,7 @@ development:
   services_url: localhost:3002
   opinions_url: localhost:3003
   edges_url: localhost:3004
+  mediator_url: localhost:3005
 
 production:
   gui_url: 156.17.130.19:13000
@@ -11,3 +12,4 @@ production:
   services_url: 156.17.130.19:13002
   opinions_url: 156.17.130.19:13003
   edges_url: 156.17.130.19:13004
+  mediator_url: localhost:13005
