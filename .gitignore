@@ -13,3 +13,4 @@ webrat-*.html
 .bundle
 vendor/bundler_gems
 bin
+/log/
