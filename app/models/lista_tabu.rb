@@ -6,7 +6,7 @@ class ListaTabu
 		@tabu = []
 	end
 	
-	def dodaj(element)
+	def add(element)
 		# puts "Dodaje do tabu #{element}".blue
 		@tabu << element
 		@tabu.shift if @tabu.length > 8
